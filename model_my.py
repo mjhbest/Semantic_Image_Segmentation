@@ -73,8 +73,10 @@ class UNet(nn.Module):
         self.dec3 = UNetDec(128, 256, dropout=True)
         self.center = nn.Sequential(
             nn.Conv2d(256, 512, 3),
+            nn.BatchNorm2d(512),
             nn.ReLU(inplace=True),
             nn.Conv2d(512, 512, 3),
+            nn.BatchNorm2d(512),
             nn.ReLU(inplace=True),
             nn.Dropout(),
             nn.ConvTranspose2d(512, 256, 2, stride=2),
@@ -84,11 +86,14 @@ class UNet(nn.Module):
         self.enc2 = UNetEnc(256, 128, 64)
         self.enc1 = nn.Sequential(
             nn.Conv2d(128, 64, 3),
+            nn.BatchNorm2d(64),
             nn.ReLU(inplace=True),
             nn.Conv2d(64, 64, 3),
+            nn.BatchNorm2d(64),
             nn.ReLU(inplace=True),
         )
         self.final = nn.Conv2d(64, num_classes, 1)
+        
 
     def forward(self, x):
         dec1 = self.dec1(x)
