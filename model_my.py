@@ -31,6 +31,7 @@ class UNetEnc(nn.Module):
             nn.Conv2d(features, features, 3, 1, 1),
             nn.BatchNorm2d(features),
             nn.ReLU(inplace=True),
+            nn.Dropout(0.2),
             nn.ConvTranspose2d(features, out_channels, 2, stride=2),
             nn.ReLU(inplace=True),
         )
@@ -41,7 +42,7 @@ class UNetEnc(nn.Module):
 
 class UNetDec(nn.Module):
 
-    def __init__(self, in_channels, out_channels, dropout=False):
+    def __init__(self, in_channels, out_channels, dropout=True):
         super().__init__()
 
         layers = [
@@ -53,7 +54,7 @@ class UNetDec(nn.Module):
             nn.ReLU(inplace=True),
         ]
         if dropout:
-            layers += [nn.Dropout(.5)]
+            layers += [nn.Dropout(.2)]
         layers += [nn.MaxPool2d(2, stride=2, ceil_mode=True)]
 
         self.down = nn.Sequential(*layers)
